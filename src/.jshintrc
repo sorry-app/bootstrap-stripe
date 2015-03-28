@@ -1,0 +1,15 @@
+{
+	"asi"      : true,
+	"browser"  : true,
+	"eqeqeq"   : false,
+	"eqnull"   : true,
+	"es3"      : true,
+	"expr"     : true,
+	"jquery"   : true,
+	"latedef"  : true,
+	"laxbreak" : true,
+	"nonbsp"   : true,
+	"strict"   : true,
+	"undef"    : false, // Disable as it was causing unresolvable errors
+	"unused"   : false // Disable as it was causing unresolvable errors
+}
