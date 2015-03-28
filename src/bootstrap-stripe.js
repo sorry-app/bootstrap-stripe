@@ -14,11 +14,20 @@
 
 		// Configure the stripe connection with the supplied key.
 		Stripe.setPublishableKey(this.pk);
+
+		// Bind the forms submit event to the handler.
+		this.$element.on('submit.bs.stripeForm', $.proxy(this.submit, this))
 	}
 
 	StripeForm.VERSION = '0.0.0'
 
 	StripeForm.DEFAULTS = {}
+
+	StripeForm.prototype.submit = function() {
+		// Return false to prevent the form
+		// from actually submitting to the server by itself.
+		return false
+	}
 
 	// BOOSTRAP STRIPE PLUGIN DEFINITION
 	// =================================
