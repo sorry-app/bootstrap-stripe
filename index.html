@@ -27,21 +27,32 @@
 
         <div class="form-group">
           <label class="control-label" for="stripe-number">Card Number:</label>
-            <input type="text" size="20" id="stripe-number" class="form-control" data-stripe="number" />
+            <input type="text" size="20" id="stripe-number" class="form-control" data-stripe="number" placeholder="e.g. xxxx xxxx xxxx xxxx" />
         </div>
 
         <div class="form-group">
           <label class="control-label" for="stripe-cvc">CVC:</label>
-            <input type="text" size="4" id="stripe-cvc" class="form-control" data-stripe="cvc" autocomplete="off" />
+            <input type="password" size="4" id="stripe-cvc" class="form-control" data-stripe="cvc" autocomplete="off" placeholder="e.g. 101" />
+
+            <div class="help-block">
+              You'll find this on the rear of your card.
+            </div>
         </div>
 
         <div class="form-group">
           <label class="control-label" for="stripe-exp-month">Expires:</label>
-            <input type="text" size="2" id="stripe-exp-month" class="form-control" data-stripe="exp-month" />
-            <input type="text" size="4" id="stripe-exp-year" class="form-control" data-stripe="exp-year" />
+
+          <div class="row">
+            <div class="col-sm-6">
+              <input type="text" size="2" id="stripe-exp-month" class="form-control" data-stripe="exp-month" placeholder="e.g. 01" />
+            </div>
+            <div class="col-sm-6">
+              <input type="text" size="4" id="stripe-exp-year" class="form-control" data-stripe="exp-year" placeholder="e.g. 16" />
+            </div>
+          </div>
         </div>
 
-        <button type="submit" class="btn">Submit</button>
+        <button type="submit" class="btn btn-md btn-success">Pay Now</button>
       </form>
     </div>
 
