@@ -36,4 +36,16 @@
 		return this
 	}
 
+	// BOOSTRAP STRIPE DATA-API
+	// ========================
+
+	$(window).on('load', function () {
+		$('form[data-stripe-form^="pk_"]').each(function () {
+			var $form = $(this)
+			var data = $form.data()
+
+			Plugin.call($form, data)
+		})
+	})	
+
 }(jQuery);
