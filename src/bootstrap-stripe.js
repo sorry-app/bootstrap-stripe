@@ -13,6 +13,9 @@
 	    // Get a reference to the input which will store the card token.
 	    this.$target   = this.$element.find('input[name="stripe_card_token"]')
 
+	    // Get a reference to the submit button.
+	    this.$button   = this.$element.find('button[type="submit"]')
+
 	    // Get the pubiic stripe key from the data attribute which was passed in.
 	    this.pk 	   = this.$element.data('stripe-form')
 
@@ -28,7 +31,8 @@
 	StripeForm.DEFAULTS = {}
 
 	StripeForm.prototype.submit = function() {
-		// TODO: Add Disabled/Loading state to the forms button.
+		// Add Disabled/Loading state to the forms button.
+		this.$button.button('loading')
 		// TODO: Reset the forms validation state so it looks valid.
 
 		// Submit the form through the stripe API library
@@ -54,7 +58,8 @@
 			// Inkect a validation error message.
 			container.append('<span class="help-block">' + response.error.message + '</span>')
 
-			// TODO: Reset the state of the submit/loading button.
+			// Reset the state of the submit/loading button.
+			this.$button.button('reset')
 		} else {
 			// No errors ocurred, the request was a success.
 			// response contains id and card, which contains additional card details
