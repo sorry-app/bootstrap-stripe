@@ -44,8 +44,16 @@
 		// the Stripe API request.
 		if (response.error) {
 			// An error has occurred.
-			// Run an alert for the moment.
-			window.alert('something went wrong')
+			// Add an error class to the credit card field.
+			// TODO: Should we use some 3rd party Bootstrap Validation lib?
+			// Get a reference to the field container
+			var container = this.$element.find('input[data-stripe="number"]').parent()
+			// Add a class to the container.
+			container.addClass('has-error')
+			// Inkect a validation error message.
+			container.append('<span class="help-block">' + response.error.message + '</span>')
+
+			// TODO: Reset the state of the submit/loading button.
 		} else {
 			// No errors ocurred, the request was a success.
 			// response contains id and card, which contains additional card details

@@ -26,21 +26,19 @@
         <input type="hidden" name="stripe_card_token" />
 
         <div class="form-group">
-          <label>
-            <span>Card Number:</span>
-            <input type="text" size="20" data-stripe="number"/>
-          </label>
+          <label class="control-label" for="stripe-number">Card Number:</label>
+            <input type="text" size="20" id="stripe-number" class="form-control" data-stripe="number" />
         </div>
 
         <div class="form-group">
-          <label for="stripe-cvc">CVC:</label>
-            <input type="text" size="4" id="stripe-cvc" data-stripe="cvc" autocomplete="off" />
+          <label class="control-label" for="stripe-cvc">CVC:</label>
+            <input type="text" size="4" id="stripe-cvc" class="form-control" data-stripe="cvc" autocomplete="off" />
         </div>
 
         <div class="form-group">
-          <label for="stripe-exp-month">Expires:</label>
-            <input type="text" size="2" id="stripe-exp-month" data-stripe="exp-month"/>
-            <input type="text" size="4" id="stripe-exp-year" data-stripe="exp-year"/>
+          <label class="control-label" for="stripe-exp-month">Expires:</label>
+            <input type="text" size="2" id="stripe-exp-month" class="form-control" data-stripe="exp-month" />
+            <input type="text" size="4" id="stripe-exp-year" class="form-control" data-stripe="exp-year" />
         </div>
 
         <button type="submit" class="btn">Submit</button>
