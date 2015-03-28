@@ -5,9 +5,20 @@
 	// BOOSTRAP STRIPE CLASS DEFINITION
 	// ================================
 
-	var Stripe = function (element, options) {}
+	var StripeForm = function (element, options) {
+	    this.$element  = $(element)
+	    this.options   = $.extend({}, StripeForm.DEFAULTS, options)
 
-	Stripe.VERSION = '0.0.0'
+	    // Get the pubiic stripe key from the data attribute which was passed in.
+	    this.pk 	   = this.$element.data('stripe-form')
+
+		// Configure the stripe connection with the supplied key.
+		Stripe.setPublishableKey(this.pk);
+	}
+
+	StripeForm.VERSION = '0.0.0'
+
+	StripeForm.DEFAULTS = {}
 
 	// BOOSTRAP STRIPE PLUGIN DEFINITION
 	// =================================
@@ -15,24 +26,24 @@
 	function Plugin(option) {
 		return this.each(function () {
 			var $this = $(this)
-			var data  = $this.data('bs.stripe')
+			var data  = $this.data('bs.stripeForm')
 
-			if (!data) $this.data('bs.stripe', (data = new Stripe(this)))
+			if (!data) $this.data('bs.stripeForm', (data = new StripeForm(this)))
 			if (typeof option == 'string') data[option].call($this)
 		})
 	} 
 
-	var old = $.fn.stripe
+	var old = $.fn.stripeForm
 
-	$.fn.stripe             = Plugin
-	$.fn.stripe.Constructor = Stripe
+	$.fn.stripeForm             = Plugin
+	$.fn.stripeForm.Constructor = StripeForm
 
 
 	// BOOSTRAP STRIPE NO CONFLICT
 	// ===========================
 
-	$.fn.stripe.noConflict = function () {
-		$.fn.stripe = old
+	$.fn.stripeForm.noConflict = function () {
+		$.fn.stripeForm = old
 		return this
 	}
 
