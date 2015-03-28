@@ -18,7 +18,32 @@
     <![endif]-->
   </head>
   <body>
-    <h1>Bootstrap Stripe Form</h1>
+    <div class="container">
+      <h1>Bootstrap Stripe Form</h1>
+
+      <!--- Form Markup. -->
+      <form action="" method="POST" id="payment-form" data-stripe="pk_test_iI0YVjACR64Ce4jJFhqF9dHr">
+        <div class="form-group">
+          <label>
+            <span>Card Number:</span>
+            <input type="text" size="20" data-stripe="number"/>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="stripe-cvc">CVC:</label>
+            <input type="text" size="4" id="stripe-cvc" data-stripe="cvc" autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label for="stripe-exp-month">Expires:</label>
+            <input type="text" size="2" id="stripe-exp-month" data-stripe="exp-month"/>
+            <input type="text" size="4" id="stripe-exp-year" data-stripe="exp-year"/>
+        </div>
+
+        <button type="submit" class="btn">Submit</button>
+      </form>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
