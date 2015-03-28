@@ -29,6 +29,7 @@
 
 	StripeForm.prototype.submit = function() {
 		// TODO: Add Disabled/Loading state to the forms button.
+		// TODO: Reset the forms validation state so it looks valid.
 
 		// Submit the form through the stripe API library
 		// binding the async request to a callback method on the form.
@@ -47,7 +48,7 @@
 			// Add an error class to the credit card field.
 			// TODO: Should we use some 3rd party Bootstrap Validation lib?
 			// Get a reference to the field container
-			var container = this.$element.find('input[data-stripe="number"]').parent()
+			var container = this.$element.find('input[data-stripe="' + response.error.param.replace('_', '-') + '"]').parent()
 			// Add a class to the container.
 			container.addClass('has-error')
 			// Inkect a validation error message.
