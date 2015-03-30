@@ -22,58 +22,130 @@
 		// Configure the stripe connection with the supplied key.
 		Stripe.setPublishableKey(this.pk);
 
+		// Configure the validator for the form.
+		this.$element.formValidation({
+		  framework: 'bootstrap',
+		  fields: {
+		    cc_number: {
+		      selector: '[data-stripe="number"]',
+		      validators: {
+		        notEmpty: {
+		            message: 'The credit card number is required'
+		        },
+		        creditCard: {
+		            message: 'The credit card number is not valid'
+		        }
+		      }
+		    },
+		   expMonth: {
+		        selector: '[data-stripe="exp-month"]',
+		        validators: {
+		            notEmpty: {
+		                message: 'The expiration month is required'
+		            },
+		            digits: {
+		                message: 'The expiration month can contain digits only'
+		            },
+		            callback: {
+		                message: 'Expired',
+		                callback: function(value, validator) {
+		                    value = parseInt(value, 10);
+		                    var year         = validator.getFieldElements('expYear').val(),
+		                        currentMonth = new Date().getMonth() + 1,
+		                        currentYear  = new Date().getFullYear();
+		                    if (value < 0 || value > 12) {
+		                        return false;
+		                    }
+		                    if (year == '') {
+		                        return true;
+		                    }
+		                    year = parseInt(year, 10);
+		                    if (year > currentYear || (year == currentYear && value > currentMonth)) {
+		                        validator.updateStatus('expYear', 'VALID');
+		                        return true;
+		                    } else {
+		                        return false;
+		                    }
+		                }
+		            }
+		        }
+		    },
+		    expYear: {
+		        selector: '[data-stripe="exp-year"]',
+		        validators: {
+		            notEmpty: {
+		                message: 'The expiration year is required'
+		            },
+		            digits: {
+		                message: 'The expiration year can contain digits only'
+		            },
+		            callback: {
+		                message: 'Expired',
+		                callback: function(value, validator) {
+		                    value = parseInt(value, 10);
+		                    var month        = validator.getFieldElements('expMonth').val(),
+		                        currentMonth = new Date().getMonth() + 1,
+		                        currentYear  = new Date().getFullYear();
+		                    if (value < currentYear || value > currentYear + 100) {
+		                        return false;
+		                    }
+		                    if (month == '') {
+		                        return false;
+		                    }
+		                    month = parseInt(month, 10);
+		                    if (value > currentYear || (value == currentYear && month > currentMonth)) {
+		                        validator.updateStatus('expMonth', 'VALID');
+		                        return true;
+		                    } else {
+		                        return false;
+		                    }
+		                }
+		            }
+		        }
+		    },
+		    cvvNumber: {
+		        selector: '[data-stripe="cvc"]',
+		        validators: {
+		            notEmpty: {
+		                message: 'The CVV number is required'
+		            }
+		        }
+		    }
+		  },
+		  live: 'disabled'
+		});
+
+		// Unbind the default validation submission.
+        this.$element.unbind('submit.fv');
 		// Bind the forms submit event to the handler.
-		this.$element.on('submit.bs.stripeForm', $.proxy(this.submit, this))
+		this.$element.on('submit.fv', $.proxy(this.pre_validate, this))
 	}
 
 	StripeForm.VERSION = '0.0.0'
 
 	StripeForm.DEFAULTS = {}
 
-	StripeForm.prototype.submit = function() {
-		// Add Disabled/Loading state to the forms button.
-		this.$button.button('loading')
-		// TODO: Reset the forms validation state so it looks valid.
-
+	StripeForm.prototype.pre_validate = function() {
 		// Submit the form through the stripe API library
 		// binding the async request to a callback method on the form.
-		Stripe.card.createToken(this.$element, $.proxy(this.callback, this));
+		Stripe.card.createToken(this.$element, $.proxy(this.pre_validate_callback, this));
 
 		// Return false to prevent the form
 		// from actually submitting to the server by itself.
 		return false
 	}
 
-	StripeForm.prototype.callback = function(status, response) {
-		// Check to see if any error ocurred during
-		// the Stripe API request.
-		if (response.error) {
-			// An error has occurred.
-			// Add an error class to the credit card field.
-			// TODO: Should we use some 3rd party Bootstrap Validation lib?
-			// Get a reference to the field container
-			var container = this.$element.find('input[data-stripe="' + response.error.param.replace('_', '-') + '"]').parent()
-			// Add a class to the container.
-			container.addClass('has-error')
-			// Inkect a validation error message.
-			container.append('<span class="help-block">' + response.error.message + '</span>')
+	StripeForm.prototype.pre_validate_callback = function(status, response) {
+		// No errors ocurred, the request was a success.
+		// response contains id and card, which contains additional card details
+		var token = response.id;
 
-			// Reset the state of the submit/loading button.
-			this.$button.button('reset')
-		} else {
-			// No errors ocurred, the request was a success.
-			// response contains id and card, which contains additional card details
-    		var token = response.id;
+		// Set the hidden card token field on the form with the value
+		// passed back from the API request.
+		this.$target.val(token)
 
-    		// Set the hidden card token field on the form with the value
-    		// passed back from the API request.
-    		this.$target.val(token)
-
-    		// Submit the form.
-    		// NOTE: We call submit direct on the DOM 
-    		// element, to prevent us getting into a submit() handler loop.
-    		this.$element.get(0).submit();
-		}
+		// Invoke the validation method on the form.
+		this.$element.data('formValidation').validate();
 	}
 
 	// BOOSTRAP STRIPE PLUGIN DEFINITION

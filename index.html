@@ -10,6 +10,9 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">    
 
+    <!-- FormValidation CSS file -->
+    <link rel="stylesheet" href="/vendor/formvalidation/dist/css/formValidation.min.css">
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -23,7 +26,7 @@
 
       <!--- Form Markup. -->
       <form action="" method="POST" id="payment-form" data-stripe-form="pk_test_iI0YVjACR64Ce4jJFhqF9dHr">
-        <input type="hidden" name="stripe_card_token" />
+        <input type="hidden" name="stripe_card_token" data-stripe="token" />
 
         <div class="form-group">
           <label class="control-label" for="stripe-number">Card Number:</label>
@@ -32,11 +35,7 @@
 
         <div class="form-group">
           <label class="control-label" for="stripe-cvc">CVC:</label>
-            <input type="password" size="4" id="stripe-cvc" class="form-control" data-stripe="cvc" autocomplete="off" placeholder="e.g. 101" />
-
-            <div class="help-block">
-              You'll find this on the rear of your card.
-            </div>
+            <input type="text" size="4" id="stripe-cvc" class="form-control" data-stripe="cvc" autocomplete="off" placeholder="e.g. 101" />
         </div>
 
         <div class="form-group">
@@ -62,7 +61,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <!-- The stripe.js API Lib. -->
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <!-- FormValidation plugin and the class supports validating Bootstrap form -->
+    <script src="/vendor/formvalidation/dist/js/formValidation.min.js"></script>
+    <script src="/vendor/formvalidation/dist/js/framework/bootstrap.min.js"></script>
     <!-- Bootstrap Stripe Plugin. -->
-    <script src="/src/bootstrap-stripe.js"></script>
+    <script src="/src/bootstrap-stripe.js"></script>      
   </body>
 </html>
