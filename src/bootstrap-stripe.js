@@ -52,28 +52,9 @@
 		            digits: {
 		                message: 'The expiration month can contain digits only'
 		            },
-		            callback: {
-		                message: 'Expired',
-		                callback: function(value, validator) {
-		                    value = parseInt(value, 10);
-		                    var year         = validator.getFieldElements('exp_year').val(),
-		                        currentMonth = new Date().getMonth() + 1,
-		                        currentYear  = new Date().getFullYear();
-		                    if (value < 0 || value > 12) {
-		                        return false;
-		                    }
-		                    if (year === '') {
-		                        return true;
-		                    }
-		                    year = parseInt(year, 10);
-		                    if (year > currentYear || (year == currentYear && value > currentMonth)) {
-		                        validator.updateStatus('exp_year', 'VALID');
-		                        return true;
-		                    } else {
-		                        return false;
-		                    }
-		                }
-		            }
+				    stripe_approved: {
+				      response_key: 'exp_month'
+				    }
 		        }
 		    },
 		    exp_year: {
@@ -84,28 +65,6 @@
 		            },
 		            digits: {
 		                message: 'The expiration year can contain digits only'
-		            },
-		            callback: {
-		                message: 'Expired',
-		                callback: function(value, validator) {
-		                    value = parseInt(value, 10);
-		                    var month        = validator.getFieldElements('exp_month').val(),
-		                        currentMonth = new Date().getMonth() + 1,
-		                        currentYear  = new Date().getFullYear();
-		                    if (value < currentYear || value > currentYear + 100) {
-		                        return false;
-		                    }
-		                    if (month === '') {
-		                        return false;
-		                    }
-		                    month = parseInt(month, 10);
-		                    if (value > currentYear || (value == currentYear && month > currentMonth)) {
-		                        validator.updateStatus('exp_month', 'VALID');
-		                        return true;
-		                    } else {
-		                        return false;
-		                    }
-		                }
 		            },
 				    stripe_approved: {
 				      response_key: 'exp_year'
@@ -126,7 +85,8 @@
 		        	}
 		        }
 		    }
-		  }
+		  },
+		  live: 'disabled'
 		});
 
 		// Unbind the default validation submission.
