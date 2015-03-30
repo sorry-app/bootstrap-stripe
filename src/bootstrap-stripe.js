@@ -13,9 +13,6 @@
 	    // Get a reference to the input which will store the card token.
 	    this.$target   = this.$element.find('input[name="stripe_card_token"]')
 
-	    // Get a reference to the submit button.
-	    this.$button   = this.$element.find('button[type="submit"]')
-
 	    // Get the pubiic stripe key from the data attribute which was passed in.
 	    this.pk 	   = this.$element.data('stripe-form')
 
@@ -32,12 +29,6 @@
 		    number: {
 		      selector: '[data-stripe="number"]',
 		      validators: {
-		        notEmpty: {
-		            message: 'The credit card number is required'
-		        },
-		        creditCard: {
-		            message: 'The credit card number is not valid'
-		        },
 		        stripe_approved: {
 		        	response_key: 'number'
 		        }
