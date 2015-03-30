@@ -19,6 +19,9 @@
 	    // Get the pubiic stripe key from the data attribute which was passed in.
 	    this.pk 	   = this.$element.data('stripe-form')
 
+	    // Create a place to store the stripe response.
+	    this.response = {}
+
 		// Configure the stripe connection with the supplied key.
 		Stripe.setPublishableKey(this.pk);
 
@@ -26,7 +29,7 @@
 		this.$element.formValidation({
 		  framework: 'bootstrap',
 		  fields: {
-		    cc_number: {
+		    number: {
 		      selector: '[data-stripe="number"]',
 		      validators: {
 		        notEmpty: {
@@ -34,10 +37,13 @@
 		        },
 		        creditCard: {
 		            message: 'The credit card number is not valid'
+		        },
+		        stripe_approved: {
+		        	response_key: 'number'
 		        }
 		      }
 		    },
-		   expMonth: {
+		   exp_month: {
 		        selector: '[data-stripe="exp-month"]',
 		        validators: {
 		            notEmpty: {
@@ -50,18 +56,18 @@
 		                message: 'Expired',
 		                callback: function(value, validator) {
 		                    value = parseInt(value, 10);
-		                    var year         = validator.getFieldElements('expYear').val(),
+		                    var year         = validator.getFieldElements('exp_year').val(),
 		                        currentMonth = new Date().getMonth() + 1,
 		                        currentYear  = new Date().getFullYear();
 		                    if (value < 0 || value > 12) {
 		                        return false;
 		                    }
-		                    if (year == '') {
+		                    if (year === '') {
 		                        return true;
 		                    }
 		                    year = parseInt(year, 10);
 		                    if (year > currentYear || (year == currentYear && value > currentMonth)) {
-		                        validator.updateStatus('expYear', 'VALID');
+		                        validator.updateStatus('exp_year', 'VALID');
 		                        return true;
 		                    } else {
 		                        return false;
@@ -70,7 +76,7 @@
 		            }
 		        }
 		    },
-		    expYear: {
+		    exp_year: {
 		        selector: '[data-stripe="exp-year"]',
 		        validators: {
 		            notEmpty: {
@@ -83,36 +89,44 @@
 		                message: 'Expired',
 		                callback: function(value, validator) {
 		                    value = parseInt(value, 10);
-		                    var month        = validator.getFieldElements('expMonth').val(),
+		                    var month        = validator.getFieldElements('exp_month').val(),
 		                        currentMonth = new Date().getMonth() + 1,
 		                        currentYear  = new Date().getFullYear();
 		                    if (value < currentYear || value > currentYear + 100) {
 		                        return false;
 		                    }
-		                    if (month == '') {
+		                    if (month === '') {
 		                        return false;
 		                    }
 		                    month = parseInt(month, 10);
 		                    if (value > currentYear || (value == currentYear && month > currentMonth)) {
-		                        validator.updateStatus('expMonth', 'VALID');
+		                        validator.updateStatus('exp_month', 'VALID');
 		                        return true;
 		                    } else {
 		                        return false;
 		                    }
 		                }
-		            }
+		            },
+				    stripe_approved: {
+				      response_key: 'exp_year'
+				    }		            
 		        }
 		    },
-		    cvvNumber: {
+		    cvv: {
 		        selector: '[data-stripe="cvc"]',
 		        validators: {
 		            notEmpty: {
 		                message: 'The CVV number is required'
-		            }
+		            },
+					cvv: {
+                        message: 'The CVV number is not valid'
+                    },	            
+		          	stripe_approved: {
+		        	   response_key: 'cvc'
+		        	}
 		        }
 		    }
-		  },
-		  live: 'disabled'
+		  }
 		});
 
 		// Unbind the default validation submission.
@@ -139,6 +153,9 @@
 		// No errors ocurred, the request was a success.
 		// response contains id and card, which contains additional card details
 		var token = response.id;
+
+		// Attach a local copy of any errors to the corresponding field data.
+		this.response = response
 
 		// Set the hidden card token field on the form with the value
 		// passed back from the API request.
