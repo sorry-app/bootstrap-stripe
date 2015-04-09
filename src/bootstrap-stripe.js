@@ -87,11 +87,18 @@
         this.$element.unbind('submit.fv')
 		// Bind the forms submit event to the handler.
 		this.$element.on('submit.fv', $.proxy(this.pre_validate, this))
+		// Bind error callbacks.
+		this.$element.on('err.form.fv', $.proxy(this.validation_error, this))
 	}
 
 	StripeForm.VERSION = '0.0.0'
 
 	StripeForm.DEFAULTS = {}
+
+	StripeForm.prototype.validation_error = function() {
+		// Reset the forms submit buttons.
+		this.$element.find(this.$validator.options.button.selector).button('reset')
+	}
 
 	StripeForm.prototype.pre_validate = function() {
 		// Set a loading state on the submit button for the form.
@@ -117,9 +124,6 @@
 		// Set the hidden card token field on the form with the value
 		// passed back from the API request.
 		this.$target.val(token)
-
-		// Reset the forms submit buttons.
-		this.$element.find(this.$validator.options.button.selector).button('reset')
 
 		// Invoke the validation method on the form.
 		this.$validator.validate()
