@@ -78,10 +78,13 @@
 		    }
 		  },
 		  live: 'disabled'
-		});
+		})
+
+		// Set a reference back to the validator.
+		this.$validator = this.$element.data('formValidation')
 
 		// Unbind the default validation submission.
-        this.$element.unbind('submit.fv');
+        this.$element.unbind('submit.fv')
 		// Bind the forms submit event to the handler.
 		this.$element.on('submit.fv', $.proxy(this.pre_validate, this))
 	}
@@ -91,9 +94,12 @@
 	StripeForm.DEFAULTS = {}
 
 	StripeForm.prototype.pre_validate = function() {
+		// Set a loading state on the submit button for the form.
+		this.$element.find(this.$validator.options.button.selector).button('loading')
+
 		// Submit the form through the stripe API library
 		// binding the async request to a callback method on the form.
-		Stripe.card.createToken(this.$element, $.proxy(this.pre_validate_callback, this));
+		Stripe.card.createToken(this.$element, $.proxy(this.pre_validate_callback, this))
 
 		// Return false to prevent the form
 		// from actually submitting to the server by itself.
@@ -103,7 +109,7 @@
 	StripeForm.prototype.pre_validate_callback = function(status, response) {
 		// No errors ocurred, the request was a success.
 		// response contains id and card, which contains additional card details
-		var token = response.id;
+		var token = response.id
 
 		// Attach a local copy of any errors to the corresponding field data.
 		this.response = response
@@ -112,8 +118,11 @@
 		// passed back from the API request.
 		this.$target.val(token)
 
+		// Reset the forms submit buttons.
+		this.$element.find(this.$validator.options.button.selector).button('reset')
+
 		// Invoke the validation method on the form.
-		this.$element.data('formValidation').validate();
+		this.$validator.validate()
 	}
 
 	// BOOSTRAP STRIPE PLUGIN DEFINITION
