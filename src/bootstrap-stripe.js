@@ -11,7 +11,7 @@
 	    this.options   = $.extend({}, StripeForm.DEFAULTS, options)
 
 	    // Get a reference to the input which will store the card token.
-	    this.$target   = this.$element.find('input[name="stripe_card_token"]')
+	    this.$target   = this.$element.find('[data-stripe-source]')
 
 	    // Get the pubiic stripe key from the data attribute which was passed in.
 	    this.pk 	   = this.$element.data('stripe-form')
